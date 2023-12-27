@@ -17,5 +17,12 @@ stage ('Install Dependencies') {
 }
 }
 }
+	stage ('Unit Tests By Satish Mane') {
+	steps {
+	dir ('exchange-cli') {
+	sh "npm run test:unit"
+}
+}
+}
 }
 }
