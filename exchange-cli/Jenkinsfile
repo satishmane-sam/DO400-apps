@@ -24,5 +24,12 @@ stage ('Install Dependencies') {
 }
 }
 }
+	stage ('Functional Test Satish') {
+	steps {
+	dir ('exchange-cli') {
+	sh "npm run test:functional"
+}
+}
+}
 }
 }
