@@ -13,8 +13,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                    oc start-build greeting-metrics \
-                    --follow --wait -n bwtjbm-metrics
+                    oc start-build greeting-matrics \
+                    --follow --wait -n bwtjbm-matrics
                 '''
             }
         }
