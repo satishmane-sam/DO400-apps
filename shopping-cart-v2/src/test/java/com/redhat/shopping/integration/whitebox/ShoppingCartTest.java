@@ -25,17 +25,17 @@ public class ShoppingCartTest {
     @Inject
     CartService cartService;
 	
-    @BeforeAll
+@BeforeAll
     public static void setup() {
-	    CatelogStorage mockStorage = Mockito.mock(InMemoryCatelogStorage.class);
+        CatalogStorage mockStorage = Mockito.mock(InMemoryCatalogStorage.class);
 
-	    Mockito.when(mockStorage.containsKey(1)).thenReturn(true);
-	    Mockito.when(mockStorage.containsKey(9999)).thenReturn(false);
+        Mockito.when(mockStorage.containsKey(1)).thenReturn(true);
+        Mockito.when(mockStorage.containsKey(9999)).thenReturn(false);
 
-	    Mokitio.when(mockStorage.get(1)).thenReturn(new Product(1, 100));
-	    QuarkusMock.installMockForType(mockStorage, CatelogStorage.class);
+        Mockito.when(mockStorage.get(1)).thenReturn(new Product(1, 100));
+
+        QuarkusMock.installMockForType(mockStorage, CatalogStorage.class);
     }
-
     @BeforeEach
     void clearCart() {
         this.cartService.clear();
