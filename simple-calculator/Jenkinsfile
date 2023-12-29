@@ -4,6 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+		sendNotification('started', 'team@example.com')
                 git branch: 'notifications',
                     url: 'https://github.com/satishmane-sam/DO400-apps'
             }
