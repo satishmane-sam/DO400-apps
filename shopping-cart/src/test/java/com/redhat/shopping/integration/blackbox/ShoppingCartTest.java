@@ -1,16 +1,14 @@
 package com.redhat.shopping.integration.blackbox;
 
-import static io.restassured.RestAssured.delete;
-import static io.restassured.RestAssured.given;
-
-import java.util.Random;
-
+import com.redhat.shopping.cart.AddToCartCommand;
+import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.redhat.shopping.cart.AddToCartCommand;
+import java.util.Random;
 
-import io.quarkus.test.junit.QuarkusTest;
+import static io.restassured.RestAssured.delete;
+import static io.restassured.RestAssured.given;
 
 @QuarkusTest
 public class ShoppingCartTest {
@@ -38,6 +36,7 @@ public class ShoppingCartTest {
 
     @Test
     public void removingNonExistingProductInCatalogReturns400() {
+        // Test implementation
         given()
             .pathParam("id", 9999)
         .when()
@@ -48,6 +47,7 @@ public class ShoppingCartTest {
 
     @Test
     public void removingNonAddedProductToTheCartReturns404() {
+        // Test implementation
         given()
             .pathParam("id", 1)
         .when()
@@ -58,8 +58,10 @@ public class ShoppingCartTest {
 
     @Test
     public void removingTheOnlyProductInCartReturns204() {
+        // Setting the scenario to have the product with ID #1 already in the cart
         this.addProductToTheCartWithIdAndRandomQuantity(1);
 
+        // Test implementation
         given()
             .pathParam("id", 1)
         .when()
@@ -67,18 +69,19 @@ public class ShoppingCartTest {
         .then()
             .statusCode(204);
     }
-    
+
     @Test
     public void removingProductFromCartContainingMultipleAndDifferentProductsReturns200() {
+        // Setting the scenario to have the products with IDs 1 and 2 already in the cart
         this.addProductToTheCartWithIdAndRandomQuantity(1);
         this.addProductToTheCartWithIdAndRandomQuantity(2);
 
+        // Test implementation
         given()
             .pathParam("id", 1)
         .when()
             .delete("/cart/products/{id}")
         .then()
             .statusCode(200);
-}
-    // @todo: add integration tests
+    }
 }

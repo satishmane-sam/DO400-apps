@@ -1,0 +1,217 @@
+{
+    "kind": "List",
+    "apiVersion": "v1",
+    "metadata": {},
+    "items": [
+        {
+            "apiVersion": "image.openshift.io/v1",
+            "kind": "ImageStream",
+            "metadata": {
+                "labels": {
+                    "app": "security-scans",
+                    "app.kubernetes.io/component": "security-scans",
+                    "app.kubernetes.io/instance": "security-scans"
+                },
+                "name": "openjdk-11"
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                },
+                "tags": [
+                    {
+                        "annotations": {
+                            "openshift.io/imported-from": "registry.access.redhat.com/ubi8/openjdk-11:1.3-3"
+                        },
+                        "from": {
+                            "kind": "DockerImage",
+                            "name": "registry.access.redhat.com/ubi8/openjdk-11:1.3-3"
+                        },
+                        "generation": null,
+                        "importPolicy": {},
+                        "name": "1.3-3",
+                        "referencePolicy": {
+                            "type": ""
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "dockerImageRepository": ""
+            }
+        },
+        {
+            "apiVersion": "image.openshift.io/v1",
+            "kind": "ImageStream",
+            "metadata": {
+                "labels": {
+                    "app": "security-scans",
+                    "app.kubernetes.io/component": "security-scans",
+                    "app.kubernetes.io/instance": "security-scans"
+                },
+                "name": "security-scans"
+            },
+            "spec": {
+                "lookupPolicy": {
+                    "local": false
+                }
+            },
+            "status": {
+                "dockerImageRepository": ""
+            }
+        },
+        {
+            "apiVersion": "build.openshift.io/v1",
+            "kind": "BuildConfig",
+            "metadata": {
+                "labels": {
+                    "app": "security-scans",
+                    "app.kubernetes.io/component": "security-scans",
+                    "app.kubernetes.io/instance": "security-scans"
+                },
+                "name": "security-scans"
+            },
+            "spec": {
+                "nodeSelector": null,
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "security-scans:latest"
+                    }
+                },
+                "postCommit": {},
+                "resources": {},
+                "source": {
+                    "contextDir": "shopping-cart",
+                    "git": {
+                        "ref": "security-scans",
+                        "uri": "https://github.com/satishmane-sam/DO400-apps.git"
+                    },
+                    "type": "Git"
+                },
+                "strategy": {
+                    "sourceStrategy": {
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "name": "openjdk-11:1.3-3"
+                        }
+                    },
+                    "type": "Source"
+                },
+                "triggers": []
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+                "labels": {
+                    "app": "security-scans",
+                    "app.kubernetes.io/component": "security-scans",
+                    "app.kubernetes.io/instance": "security-scans"
+                },
+                "name": "security-scans"
+            },
+            "spec": {
+                "replicas": 1,
+                "selector": {
+                    "matchLabels": {
+                        "app": "security-scans"
+                    }
+                },
+                "strategy": {
+                    "resources": {}
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "app": "security-scans"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "image": "image-registry.openshift-image-registry.svc:5000/bwtjbm-security-scans/security-scans:latest",
+                                "imagePullPolicy": "Always",
+                                "name": "security-scans",
+                                "ports": [
+                                    {
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    },
+                                    {
+                                        "containerPort": 8443,
+                                        "protocol": "TCP"
+                                    },
+                                    {
+                                        "containerPort": 8778,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "resources": {}
+                            }
+                        ]
+                    }
+                },
+                "test": false,
+                "triggers": []
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Service",
+            "metadata": {
+                "labels": {
+                    "app": "security-scans",
+                    "app.kubernetes.io/component": "security-scans",
+                    "app.kubernetes.io/instance": "security-scans"
+                },
+                "name": "security-scans"
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "8080-tcp",
+                        "port": 8080,
+                        "protocol": "TCP",
+                        "targetPort": 8080
+                    },
+                    {
+                        "name": "8443-tcp",
+                        "port": 8443,
+                        "protocol": "TCP",
+                        "targetPort": 8443
+                    },
+                    {
+                        "name": "8778-tcp",
+                        "port": 8778,
+                        "protocol": "TCP",
+                        "targetPort": 8778
+                    }
+                ],
+                "selector": {
+                    "app": "security-scans"
+                }
+            }
+        },
+        {
+            "apiVersion": "route.openshift.io/v1",
+            "kind": "Route",
+            "metadata": {
+                "labels": {
+                    "app": "security-scans"
+                },
+                "name": "security-scans"
+            },
+            "spec": {
+                "port": {
+                    "targetPort": 8080
+                },
+                "to": {
+                    "kind": "Service",
+                    "name": "security-scans"
+                }
+            }
+        }
+    ]
+}
