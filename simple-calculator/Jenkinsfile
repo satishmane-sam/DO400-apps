@@ -16,6 +16,14 @@ pipeline {
                 }
             }
         }
+
+	stage('Check Style') {
+            steps {
+                dir('simple-calculator') {
+                    sh './mvnw clean checkstyle:check'
+                }
+            }
+        }
     }
 	 post {
         always {
