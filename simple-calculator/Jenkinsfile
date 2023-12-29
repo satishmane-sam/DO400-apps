@@ -29,3 +29,9 @@ void sendNotification(String action, String email) {
         subject: "Pipeline ${action}: ${currentBuild.fullDisplayName}",
         body: "The following pipeline ${action}: ${env.BUILD_URL}"
 }
+
+void sendFailureAlert(String email) {
+    mail to: "${email}",
+        subject: "Pipeline failed: ${currentBuild.fullDisplayName}",
+        body: "The following pipeline failed: ${env.BUILD_URL}"
+}
