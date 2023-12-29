@@ -18,9 +18,12 @@ pipeline {
         }
 
 	stage('Check Style') {
-            steps {
-                dir('simple-calculator') {
+	script {
+                try {
                     sh './mvnw clean checkstyle:check'
+                } catch (Exception e) {
+                    sendWarningAlert("${STAGE_NAME}", 'devs@example.com')
+                    unstable("${STAGE_NAME} stage failed!")
                 }
             }
         }
